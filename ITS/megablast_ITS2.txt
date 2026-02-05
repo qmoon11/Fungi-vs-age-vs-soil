@@ -1,0 +1,38 @@
+#BLAST+ installation, database creation, and BLASTn search for fungal ITS2 analysis
+
+################################################################################
+# 1. Download BLAST+ version 2.17.0 for x64 Linux
+################################################################################
+export PATH=/scratch/tyjames_root/tyjames0/qmoon/AgeDiversityDistance/MoonITS2/BLAST/ncbi-blast-2.16.0+/bin:$PATH
+
+################################################################################
+wget https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.17.0+-x64-linux.tar.gz
+
+################################################################################
+# 2. Download and Prepare the UNITE Reference Database
+################################################################################
+# Download UNITE v10 dynamic release eukaryotes reference file (I do this locally then upload to server)
+
+# Create BLAST nucleotide database from UNITE FASTA file
+makeblastdb \
+  -in UNITE/euk/sh_general_release_dynamic_s_all_19.02.2025.fasta \
+  -dbtype nucl \
+  -out BLAST/uniteITSEuk_db
+
+################################################################################
+# 3. Run MegaBLAST ITS2 Search with Custom Parameters
+################################################################################
+
+blastn \
+  -task megablast \
+  -query rep-seqs/dna-sequences.fasta \
+  -db BLAST/uniteITSEuk_db \
+  -out BLAST/megablast_ITS2.tsv \
+  -word_size 28 \
+  -reward 1 \
+  -penalty -2 \
+  -gapopen 0 \
+  -gapextend 2 \
+  -max_target_seqs 10 \
+  -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore stitle" \
+  -num_threads 8
