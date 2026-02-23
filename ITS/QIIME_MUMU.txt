@@ -77,15 +77,12 @@ Step 3: Denoise DADA2
  
 
 
-  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 RESULTS: 
 - 94 samples sequenced
 - Tried many parameters and these work best. In total about 70% of data ends up kept and merged. 
 -these parameters keep about 60-75% of reads through filtering, merge, and chimera check.
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
-
 
 
 
@@ -143,21 +140,37 @@ make install  # as root or sudo
 ls $HOME/bin/mumu
 
 #Build tab-separated, OTU pairwise similarity scores (required)
-conda activate qiime2-amplicon-2024.10
-vsearch --allpairs_global rep-seqs/dna-sequences.fasta --blast6out similarities.tsv --id 0.0
+srun --pty --account=tyjames0 --partition=standard --time=1:00:00 bash
 
+vsearch \
+  --usearch_global ../ITS/dna-sequences_ITS.fasta \
+  --db ../ITS/dna-sequences_ITS.fasta \
+  --self \
+  --id 0.84 \
+  --iddef 1 \
+  --userfields query+target+id \
+  --maxaccepts 0 \
+  --query_cov 0.9 \
+  --maxhits 10 \
+  --userout matches_ITS.list
 
-#convert to mumu format 
-awk '{printf "%s\t%s\t%.4f\n",$1,$2,$3/100}' similarities.tsv > similarity_scores.tsv
-
-#manually remove row 1 in the output otu csv as it is empty
 
 #run mumu
-mumu \
-    --otu_table ../MoonITS2/OTU_table/ITS2_OTU_table.tsv \
-    --match_list ../MoonITS2/similarity_scores.tsv \
-    --log /dev/null \
-    --new_otu_table ../MoonITS2/OTU_table/MUMU_OTU_ITS.table
 
-#MUMU_OTU_ITS.table is the table to be used for downstream analysis
+mumu \
+    --otu_table ../MoonITS2/OTU_table/ITS2_OTU_table_age.tsv \
+    --match_list ../MoonITS2/matches_ITS.list \
+    --log mumu_merge_ITS.log \
+    --new_otu_table new_MUMU_OTU_ITS2.table
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+RESULTS: 
+- 94 samples sequenced
+- MUMU found 5175 original OTUs, after merging just 3913
+-original OTU table: ITS2_OTU_table_age.tsv
+-MUMU output: new_MUMU_OTU_ITS2.table
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 
