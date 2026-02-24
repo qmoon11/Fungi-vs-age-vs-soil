@@ -85,6 +85,7 @@ RESULTS:
 - 19 samples sequenced
 - Tried many parameters and these work best. In total about 70% of data ends up kept and merged. 
 -these parameters keep about 60-80% of reads through filtering, merge, and chimera check.
+-note --p-min-fold-parent-over-abundance 3
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
