@@ -85,7 +85,6 @@ RESULTS:
 - 19 samples sequenced
 - Tried many parameters and these work best. In total about 70% of data ends up kept and merged. 
 -these parameters keep about 60-80% of reads through filtering, merge, and chimera check.
--note --p-min-fold-parent-over-abundance 3
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
@@ -121,3 +120,35 @@ biom convert -i OTU_table/feature-table.biom \
 qiime tools export \
 --input-path rep-seqs-clustered_0.99_18s.qza \
 --output-path rep-seqs
+
+
+########################################################################################################
+Step 6: MUMU denoise
+########################################################################################################
+#I previously downloaded and set up MUMU (see ITS,16s work flow)
+
+#tab-separated, OTU pairwise similarity scores (required)
+vsearch \
+  --usearch_global rep-seqs/dna-sequences_18s_age.fasta \
+  --db rep-seqs/dna-sequences_18s_age.fasta \
+  --self \
+  --id 0.84 \
+  --iddef 1 \
+  --userfields query+target+id \
+  --maxaccepts 0 \
+  --query_cov 0.9 \
+  --maxhits 10 \
+  --userout matches_18s_age.list
+
+#run mumu
+mumu \
+    --otu_table OTU_table/18s_OTU_table_age.tsv \
+    --match_list matches_18s_age.list \
+    --log mumu_merge_18s_age.log \
+    --new_otu_table MUMU_OTU_18s_age.table
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+RESULTS: 
+- 94 samples sequenced
+- MUMU found 3,691 original OTUs, after merging just 2,183
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
