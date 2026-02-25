@@ -211,6 +211,4 @@ mumu \
 RESULTS: 
 - 94 samples sequenced
 - MUMU found 43,351 original ASVs, after merging just 16,471
-- original OTU table: ITS2_OTU_table_age.tsv
-- MUMU output: new_MUMU_OTU_ITS2.table
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
