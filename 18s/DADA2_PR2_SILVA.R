@@ -54,10 +54,10 @@ write.csv(taxa_df, "18s_taxonomic_pr2_bootstrap.csv", row.names = FALSE)
 
 
 
-# Set working directory (customize as needed)
+# Set working directory
 setwd("/scratch/tyjames_root/tyjames0/qmoon/AgeDiversityDistance/Moon18s")
 
-# ASV FASTA file (adjust path if needed)
+# ASV FASTA file
 fasta_file <- "rep-seqs/dna-sequences_18s_age.fasta"
 
 # PR2 database
